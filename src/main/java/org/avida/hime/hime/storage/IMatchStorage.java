@@ -1,5 +1,7 @@
 package org.avida.hime.hime.storage;
 
+import java.util.regex.MatchResult;
+
 //The interfaces are for implementing the concrete Database storage solution later depending on what we actually use.
 public interface IMatchStorage {
     //should probably have tournament Id for tourneys with same name?
