@@ -1,5 +1,6 @@
 package org.avida.hime.hime;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.avida.hime.hime.commands.PingCommand;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.avida.hime.hime.commands.QueryTestCommand;
 
 public class CommandListener extends ListenerAdapter {
 	private static final Pattern SPACE_PATTERN=Pattern.compile("\\s");
@@ -25,6 +27,7 @@ public class CommandListener extends ListenerAdapter {
 		this.prefix = prefix;
 		commands.put("ping", new PingCommand());
 		commands.put("help", new HelpCommand(Collections.unmodifiableMap(commands)));
+		commands.put("querytest", new QueryTestCommand());
 	}
 	
 	@Override
@@ -45,7 +48,11 @@ public class CommandListener extends ListenerAdapter {
 			msg.reply("Command not found").queue();
 		}else {
 			String[] args=Stream.of(split).skip(1).toArray(String[]::new);
-			cmd.run(event, args);
+			try {
+				cmd.run(event, args);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
