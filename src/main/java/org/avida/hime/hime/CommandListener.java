@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import org.avida.hime.hime.commands.AddInfoTestCommand;
 import org.avida.hime.hime.commands.HelpCommand;
 import org.avida.hime.hime.commands.PingCommand;
 
@@ -28,6 +29,7 @@ public class CommandListener extends ListenerAdapter {
 		commands.put("ping", new PingCommand());
 		commands.put("help", new HelpCommand(Collections.unmodifiableMap(commands)));
 		commands.put("querytest", new QueryTestCommand());
+		commands.put("addrow", new AddInfoTestCommand());
 	}
 	
 	@Override

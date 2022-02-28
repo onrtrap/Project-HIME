@@ -25,7 +25,9 @@ public class QueryTestCommand implements BotCommand {
     {
         String output = "";
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-             Statement stmt = conn.createStatement();
+             Statement stmt = conn.createStatement(
+                     ResultSet.TYPE_SCROLL_INSENSITIVE,
+                     ResultSet.CONCUR_UPDATABLE);
              ResultSet rs = stmt.executeQuery(QUERY);) {
             // Extract data from result set
             while (rs.next()) {
