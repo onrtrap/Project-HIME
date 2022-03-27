@@ -6,3 +6,4 @@ pom.xml.versionsBackup
 config.json
 
 *.json
+auth.json
