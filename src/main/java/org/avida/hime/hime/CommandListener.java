@@ -4,18 +4,14 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import org.avida.hime.hime.commands.AddInfoTestCommand;
-import org.avida.hime.hime.commands.HelpCommand;
-import org.avida.hime.hime.commands.PingCommand;
+import org.avida.hime.hime.commands.*;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.avida.hime.hime.commands.QueryTestCommand;
 
 public class CommandListener extends ListenerAdapter {
 	private static final Pattern SPACE_PATTERN=Pattern.compile("\\s");
@@ -27,35 +23,43 @@ public class CommandListener extends ListenerAdapter {
 	public CommandListener(String prefix) {
 		this.prefix = prefix;
 		commands.put("ping", new PingCommand());
-		commands.put("help", new HelpCommand(Collections.unmodifiableMap(commands)));
+		commands.put("himehelp", new HelpCommand(Collections.unmodifiableMap(commands)));
 		commands.put("querytest", new QueryTestCommand());
 		commands.put("addrow", new AddInfoTestCommand());
+		commands.put("signup", new AddUserInfoCommand());
+		commands.put("favoritefood", new AddFavoriteFood());
+		commands.put("giveticket", new GiveWishTicketCommand());
+		commands.put("tradeticket", new TradeWishTicketCommand());
+		commands.put("myinfo", new GiveUserInfoCommand());
+		commands.put("wishstream", new GiveTicketsToAllCommand());
 	}
 	
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 		Message msg = event.getMessage();
-		if(msg.getAuthor().isBot()) {
+		if (msg.getAuthor().isBot()) {
 			return;
 		}
 		String raw = msg.getContentRaw();
-		if(!raw.startsWith(prefix)) {
+		if (!raw.startsWith(prefix)) {
 			return;
 		}
-		String messageWithoutPrefix=raw.substring(prefix.length());
-		String[] split=SPACE_PATTERN.split(messageWithoutPrefix);
-		String commandName=split[0];
-		BotCommand cmd = commands.get(commandName);
-		if(cmd==null) {
-			msg.reply("Command not found").queue();
-		}else {
-			String[] args=Stream.of(split).skip(1).toArray(String[]::new);
-			try {
-				cmd.run(event, args);
-			} catch (SQLException e) {
-				e.printStackTrace();
+
+			String messageWithoutPrefix = raw.substring(prefix.length());
+			String[] split = SPACE_PATTERN.split(messageWithoutPrefix);
+			String commandName = split[0];
+			BotCommand cmd = commands.get(commandName);
+			if (cmd == null) {
+				msg.reply("Command not found").queue();
+			} else {
+				String[] args = Stream.of(split).skip(1).toArray(String[]::new);
+				try {
+					cmd.run(event, args);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
+
 		}
-		
-	}
+
 }

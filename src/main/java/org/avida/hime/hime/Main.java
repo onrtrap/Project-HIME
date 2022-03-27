@@ -8,6 +8,9 @@ import java.nio.charset.StandardCharsets;
 
 import javax.security.auth.login.LoginException;
 
+import com.jagrosh.jdautilities.command.CommandClient;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -18,9 +21,9 @@ import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
 public class Main {
-	
+
 	private static Logger LOG=LoggerFactory.getLogger(Main.class);
-	
+
 	public static void main(String[] args) {
 		try {
 			JSONObject json=readConfig();
@@ -33,20 +36,22 @@ public class Main {
 			LOG.error("Cannot login - make sure the token is correct");
 		} catch (IllegalArgumentException e) {
 			LOG.error("No token was entered.");
-		} 
+			e.printStackTrace();
+		}
 	}
-	
+
 	private static JSONObject readConfig() throws IOException {
 		try(BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream("auth.json"),StandardCharsets.UTF_8))){
 			JSONTokener tokener=new JSONTokener(br);
 			return new JSONObject(tokener);
-		} 
+		}
 	}
-	
+
 	private static void start(String token,String prefix) throws LoginException, IllegalArgumentException {
+
 		DefaultShardManagerBuilder.createDefault(token)
-				.addEventListeners(new CommandListener(prefix))
-				.build();
-		
+		 .addEventListeners(new CommandListener(prefix))
+		 .build();
+		SlashCommandListener slashListener = new SlashCommandListener(token);
 	}
 }

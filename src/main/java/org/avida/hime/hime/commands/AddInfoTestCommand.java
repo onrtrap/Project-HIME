@@ -29,11 +29,11 @@ public class AddInfoTestCommand implements BotCommand {
             rs.updateInt("id", 3);
             rs.updateString("testString","test");
             // Commit row
-            rs.insertRow();
+            //rs.insertRow();
         }
     }
     @Override
     public String getHelp() {
-        return null;
+        return "Tests adding values to the database.";
     }
 }
