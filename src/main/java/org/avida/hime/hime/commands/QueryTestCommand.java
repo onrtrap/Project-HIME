@@ -3,15 +3,29 @@ package org.avida.hime.hime.commands;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.avida.hime.hime.BotCommand;
-import org.avida.hime.hime.SQL.SQLConnection;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.sql.*;
 
 import java.sql.ResultSet;
 
+import static org.avida.hime.hime.Main.readConfig;
+
 public class QueryTestCommand implements BotCommand {
-    static final String DB_URL = "jdbc:mysql://localhost/test";
-    static final String USER = "himehost";
-    static final String PASS = "mermaiddancer";
+    static JSONObject json;
+
+    static {
+        try {
+            json = readConfig();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static final String DB_URL = json.getString("DB");
+    static final String USER = json.getString("SQLUsername");
+    static final String PASS = json.getString("SQLPassword");
     static final String QUERY = "SELECT id, testString FROM testTable";
     String out = getOutput();
 
@@ -28,7 +42,7 @@ public class QueryTestCommand implements BotCommand {
              Statement stmt = conn.createStatement(
                      ResultSet.TYPE_SCROLL_INSENSITIVE,
                      ResultSet.CONCUR_UPDATABLE);
-             ResultSet rs = stmt.executeQuery(QUERY);) {
+             ResultSet rs = stmt.executeQuery(QUERY)) {
             // Extract data from result set
             while (rs.next()) {
                 // Retrieve by column name

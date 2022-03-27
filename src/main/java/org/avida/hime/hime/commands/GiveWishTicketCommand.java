@@ -7,15 +7,29 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.avida.hime.hime.BotCommand;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.avida.hime.hime.Main.readConfig;
+
 public class GiveWishTicketCommand extends SlashCommand implements BotCommand{
-    static final String DB_URL = "jdbc:mysql://localhost/test";
-    static final String USER = "himehost";
-    static final String PASS = "mermaiddancer";
+    static JSONObject json;
+
+    static {
+        try {
+            json = readConfig();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static final String DB_URL = json.getString("DB");
+    static final String USER = json.getString("SQLUsername");
+    static final String PASS = json.getString("SQLPassword");
     static final String QUERY = "SELECT * FROM users";
 
     public GiveWishTicketCommand(){
@@ -46,7 +60,7 @@ public class GiveWishTicketCommand extends SlashCommand implements BotCommand{
         System.out.println(event.getMessage().getContentDisplay());
         String name = event.getMessage().getContentDisplay().substring(event.getMessage().getContentDisplay().indexOf(" ") + 1, event.getMessage().getContentDisplay().indexOf("$") - 1);
         String amount = event.getMessage().getContentDisplay().substring(event.getMessage().getContentDisplay().indexOf("$") + 1);
-        String output = "";
+        String output;
         int amt = Integer.parseInt(amount);
         if(event.getAuthor().getId().equals("406462375106183168")){
             output = addTicket(name,amt);
@@ -64,7 +78,7 @@ public class GiveWishTicketCommand extends SlashCommand implements BotCommand{
                  Statement stmt = conn.createStatement(
                          ResultSet.TYPE_SCROLL_INSENSITIVE,
                          ResultSet.CONCUR_UPDATABLE);
-                 ResultSet rs = stmt.executeQuery("SELECT * FROM bank");
+                 ResultSet rs = stmt.executeQuery("SELECT * FROM bank")
             ) {
                 rs.next();
                 if (rs.getInt("wishtickets") >= num) {
@@ -78,7 +92,7 @@ public class GiveWishTicketCommand extends SlashCommand implements BotCommand{
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = stmt.executeQuery(QUERY);
+            ResultSet rs = stmt.executeQuery(QUERY)
 
         ) {
             try {

@@ -40,7 +40,7 @@ public class Main {
 		}
 	}
 
-	private static JSONObject readConfig() throws IOException {
+	public static JSONObject readConfig() throws IOException {
 		try(BufferedReader br=new BufferedReader(new InputStreamReader(new FileInputStream("auth.json"),StandardCharsets.UTF_8))){
 			JSONTokener tokener=new JSONTokener(br);
 			return new JSONObject(tokener);

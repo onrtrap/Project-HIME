@@ -8,16 +8,28 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.avida.hime.hime.BotCommand;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+
+import static org.avida.hime.hime.Main.readConfig;
 
 public class GiveUserInfoCommand extends SlashCommand implements BotCommand {
-    static final String DB_URL = "jdbc:mysql://localhost/test";
-    static final String USER = "himehost";
-    static final String PASS = "mermaiddancer";
+    static JSONObject json;
+
+    static {
+        try {
+            json = readConfig();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static final String DB_URL = json.getString("DB");
+    static final String USER = json.getString("SQLUsername");
+    static final String PASS = json.getString("SQLPassword");
     static final String QUERY = "SELECT * FROM users";
 
     public GiveUserInfoCommand(){
@@ -37,7 +49,7 @@ public class GiveUserInfoCommand extends SlashCommand implements BotCommand {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = stmt.executeQuery(QUERY);
+            ResultSet rs = stmt.executeQuery(QUERY)
 
         ) {
             try {
@@ -64,7 +76,7 @@ public class GiveUserInfoCommand extends SlashCommand implements BotCommand {
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = stmt.executeQuery(QUERY);
+            ResultSet rs = stmt.executeQuery(QUERY)
 
         ) {
             try {
@@ -92,7 +104,6 @@ public class GiveUserInfoCommand extends SlashCommand implements BotCommand {
     @Override
     protected void execute(SlashCommandEvent event) {
         OptionMapping option = event.getOption("name");
-        MessageChannel channel = event.getChannel();
         if (option == null) {
             String id = event.getUser().getId();
             try {

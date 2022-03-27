@@ -2,12 +2,27 @@ package org.avida.hime.hime.commands;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.avida.hime.hime.BotCommand;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.sql.*;
+
+import static org.avida.hime.hime.Main.readConfig;
+
 public class TradeWishTicketCommand implements BotCommand{
-    static final String DB_URL = "jdbc:mysql://localhost/test";
-    static final String USER = "himehost";
-    static final String PASS = "mermaiddancer";
+    static JSONObject json;
+
+    static {
+        try {
+            json = readConfig();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static final String DB_URL = json.getString("DB");
+    static final String USER = json.getString("SQLUsername");
+    static final String PASS = json.getString("SQLPassword");
     static final String QUERY = "SELECT * FROM users";
     @Override
     public void run(GuildMessageReceivedEvent event, String[] args) throws SQLException {
@@ -16,14 +31,14 @@ public class TradeWishTicketCommand implements BotCommand{
         String name = event.getMessage().getContentDisplay().substring(event.getMessage().getContentDisplay().indexOf(" ") + 1, event.getMessage().getContentDisplay().indexOf("$") - 1);
         String userId = event.getAuthor().getId();
         String amount = event.getMessage().getContentDisplay().substring(event.getMessage().getContentDisplay().indexOf("$") + 1);
-        String output = "";
+        String output;
         int amt = Integer.parseInt(amount);
         if(amt > 0) {
             output = addTicket(name,userId, amt, event);
             channel.sendMessage(output).queue();
         }
         else
-            channel.sendMessage("Invalid Ticket amount");
+            channel.sendMessage("Invalid Ticket amount").queue();
     }
 
     public String addTicket(String name, String userId, int num, GuildMessageReceivedEvent event) throws SQLException {
@@ -32,7 +47,7 @@ public class TradeWishTicketCommand implements BotCommand{
             Statement stmt = conn.createStatement(
                     ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
-            ResultSet rs = stmt.executeQuery(QUERY);) {
+            ResultSet rs = stmt.executeQuery(QUERY)) {
             if(event.getAuthor().getName().equals(name))
                 return "You can't send Wish Tickets to yourself!";
             try {
@@ -58,7 +73,7 @@ public class TradeWishTicketCommand implements BotCommand{
         Statement stmt = conn.createStatement(
                 ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_UPDATABLE);
-        ResultSet rs = stmt.executeQuery(QUERY);) {
+        ResultSet rs = stmt.executeQuery(QUERY)) {
             while (rs.next()) {
                 if (rs.getString("Name").equalsIgnoreCase(name)) {
                     rs.updateInt("WishTickets", rs.getInt("WishTickets") + num);
