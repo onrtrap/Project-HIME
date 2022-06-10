@@ -5,7 +5,6 @@ import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInsta
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
@@ -13,7 +12,6 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.AppendValuesResponse;
-import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
 import java.io.FileNotFoundException;
@@ -25,7 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class SheetsQuickstart {
+public class SheetAPI {
     private static final String APPLICATION_NAME = "Hime";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
@@ -48,7 +46,7 @@ public class SheetsQuickstart {
      */
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
-        InputStream in = SheetsQuickstart.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
+        InputStream in = SheetAPI.class.getResourceAsStream(CREDENTIALS_FILE_PATH);
         if (in == null) {
             throw new FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH);
         }
@@ -93,7 +91,7 @@ public class SheetsQuickstart {
             }
         }
     }
-    public SheetsQuickstart(String id) throws IOException {
+    public SheetAPI(String id) throws IOException {
         NetHttpTransport HTTP_TRANSPORT = new com.google.api.client.http.javanet.NetHttpTransport();
          this.id = id;
          service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
@@ -121,18 +119,6 @@ public class SheetsQuickstart {
                         .execute();
 
     }
-    public ValueRange appendTest() throws IOException {
-        ValueRange appendBody = new ValueRange()
-                .setValues(Arrays.asList(
-                        Arrays.asList("Total", "=E1+E4")));
-        AppendValuesResponse appendResult = service
-                .spreadsheets()
-                .values()
-                .append(id, "A1", appendBody)
-                .setValueInputOption("USER_ENTERED")
-                .setInsertDataOption("INSERT_ROWS")
-                .setIncludeValuesInResponse(true)
-                .execute();
-        return appendResult.getUpdates().getUpdatedData();
-    }
+
+
 }

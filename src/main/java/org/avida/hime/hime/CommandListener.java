@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.avida.hime.hime.commands.*;
 
 import net.dv8tion.jda.api.entities.Message;
@@ -32,6 +33,7 @@ public class CommandListener extends ListenerAdapter {
 		commands.put("tradeticket", new TradeWishTicketCommand());
 		commands.put("myinfo", new GiveUserInfoCommand());
 		commands.put("wishstream", new GiveTicketsToAllCommand());
+		commands.put("updatedb", new UpdateDBCommand());
 	}
 	
 	@Override

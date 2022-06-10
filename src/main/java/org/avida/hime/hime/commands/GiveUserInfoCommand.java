@@ -55,9 +55,9 @@ public class GiveUserInfoCommand extends SlashCommand implements BotCommand {
             try {
                 while (rs.next()) {
                     if (rs.getString("Id").equals(id)) {
-                        out = "Name: " + rs.getString("Name") + "\nWish Tickets: " + rs.getInt("WishTickets");
-                        if(rs.getString("Favorite Food") != null)
-                            out += "\nFavorite Food: " + rs.getString("Favorite Food");
+                        out = "Name: " + rs.getString("Name") + "\nWish Tickets: " + rs.getInt("WishTickets")
+                        + "\nFavorite Food: " + rs.getString("FavoriteFood")
+                        + "\nReplay: " + rs.getString("Replay");
                         // Commit row
                     }
                 }
@@ -83,8 +83,8 @@ public class GiveUserInfoCommand extends SlashCommand implements BotCommand {
                 while (rs.next()) {
                     if (rs.getString("Name").equalsIgnoreCase(name)) {
                         out = "Name: " + rs.getString("Name") + "\nWish Tickets: " + rs.getInt("WishTickets");
-                        if(rs.getString("Favorite Food") != null)
-                            out += "\nFavorite Food: " + rs.getString("Favorite Food");
+                        out += "\nFavorite Food: " + rs.getString("FavoriteFood");
+                        out += "\nReplay: " + rs.getString("Replay");
                         // Commit row
                     }
                 }
@@ -116,6 +116,7 @@ public class GiveUserInfoCommand extends SlashCommand implements BotCommand {
             try {
                 System.out.println(option.getAsString());
                 event.reply(getSlashInfo(option.getAsString())).queue();
+
             } catch (SQLException e) {
                 e.printStackTrace();
             }

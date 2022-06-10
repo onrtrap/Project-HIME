@@ -19,7 +19,9 @@ public class SlashCommandListener extends ListenerAdapter {
         builder.addSlashCommand(new GiveUserInfoCommand());
         //builder.addSlashCommand(new GiveWishTicketCommand());
         //builder.addSlashCommand(new SubmitArchetypeCommand());
+        builder.addSlashCommand(new EditReplayCommand());
         builder.addSlashCommand(new CoinflipCommand());
+        builder.addSlashCommand(new RankUpCommand());
         builder.setOwnerId("406462375106183168");
         builder.setActivity(activity);
         builder.forceGuildOnly("923294381279166554");

@@ -48,6 +48,7 @@ public class AddUserInfoCommand extends SlashCommand implements BotCommand{
             // Commit row
             rs.insertRow();
         }
+
     }
     @Override
     public String getHelp() {

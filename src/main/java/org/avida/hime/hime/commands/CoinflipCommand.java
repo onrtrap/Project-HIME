@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import java.util.Random;
 
 public class CoinflipCommand extends SlashCommand {
+    
     public CoinflipCommand(){
         this.name = "coinflip";
         this.help = "Flips a coin.";

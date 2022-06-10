@@ -4,7 +4,7 @@ import com.jagrosh.jdautilities.command.SlashCommand;
 
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 
-import org.avida.hime.hime.sheets.SheetsQuickstart;
+import org.avida.hime.hime.sheets.SheetAPI;
 
 import java.io.IOException;
 
@@ -17,7 +17,7 @@ public class SubmitArchetypeCommand extends SlashCommand{
     @Override
     protected void execute(SlashCommandEvent event) {
         try {
-            SheetsQuickstart spreadsheet = new SheetsQuickstart("1lXdYLq8bFNQ5Pqp1rXebVQNlwd2EAiSlFk7va4V6PIA");
+            SheetAPI spreadsheet = new SheetAPI("1lXdYLq8bFNQ5Pqp1rXebVQNlwd2EAiSlFk7va4V6PIA");
             spreadsheet.createValues2Column("Test", "Test", "Deck Submissions!B4", "Deck Submissions!E4");
             //event.reply((Message) spreadsheet.appendTest().getValues().get(0).get(1)).queue();
             event.reply("Test complete.").queue();

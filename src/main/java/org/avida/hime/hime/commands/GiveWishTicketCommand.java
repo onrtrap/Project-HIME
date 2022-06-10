@@ -100,7 +100,7 @@ public class GiveWishTicketCommand extends SlashCommand implements BotCommand{
                     if (rs.getString("Name").equalsIgnoreCase(name)) {
                         rs.updateInt("WishTickets", rs.getInt("WishTickets") + num);
                         rs.updateRow();
-                        return "Wish Tickets updated. " + rs.getString("Name") + " now has " + rs.getInt("WishTickets") + " Wish Tickets.";
+                        return "Wish Tickets updated. " + rs.getString("Name") + " now has " + rs.getInt("WishTickets") + " Wish Ticket(s).";
                         // Commit row
                     }
                 }
